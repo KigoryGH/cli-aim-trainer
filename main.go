@@ -2,9 +2,8 @@ package main
 
 // imports
 import (
-	"fmt"
+	//"fmt"
+	//tcell "github.com/gdamore/tcell/v2"
 )
-
 func main() {
-	fmt.Println("Testing")
 }
