@@ -33,6 +33,11 @@ func main() {
 			mx, my := ev.Position()
 			if ev.Buttons() == tcell.Button1 {
 				if mx == x && my == y {
+					x = rand.Intn(width)
+					y = rand.Intn(height)
+					screen.Clear()
+					screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
+					screen.Show()
 				}
 			}
 
