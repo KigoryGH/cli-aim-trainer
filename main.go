@@ -1,8 +1,9 @@
 package main
 
 import (
-	tcell "github.com/gdamore/tcell/v2"
 	"math/rand"
+
+	tcell "github.com/gdamore/tcell/v2"
 )
 
 func main() {
@@ -25,11 +26,13 @@ func main() {
 
 	screen.Show()
 
-	switch ev := screen.PollEvent().(type) {
-	case *tcell.EventKey:
-		if ev.Rune() == 'q' {
-			screen.Fini()
-			return
+	for {
+		switch ev := screen.PollEvent().(type) {
+		case *tcell.EventKey:
+			if ev.Rune() == 'q' {
+				screen.Fini()
+				return
+			}
 		}
 	}
 }
