@@ -18,6 +18,7 @@ func main() {
 	}
 
 	screen.Clear()
+	screen.EnableMouse()
 
 	width, height := screen.Size()
 	x := rand.Intn(width)
@@ -28,7 +29,14 @@ func main() {
 
 	for {
 		switch ev := screen.PollEvent().(type) {
-		case *tcell.EventKey:
+		case *tcell.EventMouse: // for mouse primaryButton
+			mx, my := ev.Position()
+			if ev.Buttons() == tcell.Button1 {
+				if mx == x && my == y {
+				}
+			}
+
+		case *tcell.EventKey: // for quit keypress
 			if ev.Rune() == 'q' {
 				screen.Fini()
 				return
