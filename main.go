@@ -15,18 +15,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	screen.Clear()
+
 	width, height := screen.Size()
-x := rand.Intn(width)
-y := rand.Intn(height)
+	x := rand.Intn(width)
+	y := rand.Intn(height)
 	screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
-	
+
 	screen.Show()
 
-		ev := screen.PollEvent()
-
-		switch ev.(type) {
-case *tcell.EventKey:
-	screen.Fini()
-	return
-}
+	switch ev := screen.PollEvent().(type) {
+	case *tcell.EventKey:
+		if ev.Rune() == 'q' {
+			screen.Fini()
+			return
+		}
+	}
 }
