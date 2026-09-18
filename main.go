@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"strconv"
 
 	tcell "github.com/gdamore/tcell/v2"
 )
@@ -25,7 +26,17 @@ func main() {
 	y := rand.Intn(height)
 	screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
 
+	label := "Score:"
+	for i, ch := range label {
+		screen.SetContent(i, 0, ch, nil, tcell.StyleDefault)
+	}
+	scoreStr := strconv.Itoa(0)
+	for i, ch := range scoreStr {
+		screen.SetContent(len(label)+i, 0, ch, nil, tcell.StyleDefault)
+	}
 	screen.Show()
+
+	score := 0
 
 	for {
 		switch ev := screen.PollEvent().(type) {
@@ -37,10 +48,18 @@ func main() {
 					y = rand.Intn(height)
 					screen.Clear()
 					screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
+					score++
+					label := "Score:"
+					for i, ch := range label {
+						screen.SetContent(i, 0, ch, nil, tcell.StyleDefault)
+					}
+					scoreStr := strconv.Itoa(score)
+					for i, ch := range scoreStr {
+						screen.SetContent(len(label)+i, 0, ch, nil, tcell.StyleDefault)
+					}
 					screen.Show()
 				}
 			}
-
 		case *tcell.EventKey: // for quit keypress
 			if ev.Rune() == 'q' {
 				screen.Fini()
