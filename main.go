@@ -12,11 +12,11 @@ func countdown(screen tcell.Screen) {
 	for i := 60; i >= 0; i-- {
 		label := "Time:"
 		for j, ch := range label {
-			screen.SetContent(15+j, 0, ch, nil, tcell.StyleDefault)
+			screen.SetContent(20+j, 0, ch, nil, tcell.StyleDefault)
 		}
 		timeStr := strconv.Itoa(i)
 		for j, ch := range timeStr {
-			screen.SetContent(15+len(label)+j, 0, ch, nil, tcell.StyleDefault)
+			screen.SetContent(20+len(label)+j, 0, ch, nil, tcell.StyleDefault)
 		}
 		screen.Show()
 		time.Sleep(time.Second)
