@@ -64,6 +64,7 @@ func main() {
 			if ev.Rune() == 'q' {
 				screen.Fini()
 				return
+
 			}
 		}
 	}
