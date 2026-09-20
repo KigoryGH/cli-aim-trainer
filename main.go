@@ -8,8 +8,11 @@ import (
 	tcell "github.com/gdamore/tcell/v2"
 )
 
+var timeLeft int = 60
+
 func countdown(screen tcell.Screen) {
 	for i := 60; i >= 0; i-- {
+		timeLeft = i
 		label := "Time:"
 		for j, ch := range label {
 			screen.SetContent(20+j, 0, ch, nil, tcell.StyleDefault)
@@ -67,6 +70,7 @@ func main() {
 					screen.Clear()
 					screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
 					score++
+					// scoreBlock start
 					label := "Score:"
 					for i, ch := range label {
 						screen.SetContent(i, 0, ch, nil, tcell.StyleDefault)
@@ -75,6 +79,18 @@ func main() {
 					for i, ch := range scoreStr {
 						screen.SetContent(len(label)+i, 0, ch, nil, tcell.StyleDefault)
 					}
+					// scoreBlock end
+
+					// timeBlock start
+					timeLabel := "Time:"
+					for i, ch := range timeLabel {
+						screen.SetContent(20+i, 0, ch, nil, tcell.StyleDefault)
+					}
+					timeStr := strconv.Itoa(timeLeft)
+					for i, ch := range timeStr {
+						screen.SetContent(20+len(timeLabel)+i, 0, ch, nil, tcell.StyleDefault)
+					}
+					// timeBlock end
 					screen.Show()
 				}
 			}
