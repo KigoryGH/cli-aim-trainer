@@ -60,8 +60,12 @@ func main() {
 	score := 0
 
 	for {
+		if timeLeft <= 0 {
+			screen.Fini()
+			return
+		}
 		switch ev := screen.PollEvent().(type) {
-		case *tcell.EventMouse: // for mouse primaryButton
+		case *tcell.EventMouse:
 			mx, my := ev.Position()
 			if ev.Buttons() == tcell.Button1 {
 				if mx == x && my == y {
@@ -94,11 +98,10 @@ func main() {
 					screen.Show()
 				}
 			}
-		case *tcell.EventKey: // for quit keypress
+		case *tcell.EventKey:
 			if ev.Rune() == 'q' {
 				screen.Fini()
 				return
-
 			}
 		}
 	}
