@@ -10,17 +10,20 @@ import (
 
 var timeLeft int = 60
 
+func drawText(screen tcell.Screen, x, y int, text string) {
+	for i, ch := range text {
+		screen.SetContent(x+i, y, ch, nil, tcell.StyleDefault)
+	}
+}
+
 func countdown(screen tcell.Screen) {
+	_, _ = screen.Size()
 	for i := 60; i >= 0; i-- {
 		timeLeft = i
-		label := "Time:"
-		for j, ch := range label {
-			screen.SetContent(20+j, 0, ch, nil, tcell.StyleDefault)
-		}
-		timeStr := strconv.Itoa(i)
-		for j, ch := range timeStr {
-			screen.SetContent(20+len(label)+j, 0, ch, nil, tcell.StyleDefault)
-		}
+		width, _ := screen.Size()
+		timeStr := "Time:" + strconv.Itoa(i)
+		startX := width - len(timeStr)
+		drawText(screen, startX, 1, timeStr)
 		screen.Show()
 		time.Sleep(time.Second)
 	}
@@ -45,16 +48,10 @@ func main() {
 	width, height := screen.Size()
 	x := rand.Intn(width)
 	y := rand.Intn(height)
-	screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
 
-	label := "Score:"
-	for i, ch := range label {
-		screen.SetContent(i, 0, ch, nil, tcell.StyleDefault)
-	}
-	scoreStr := strconv.Itoa(0)
-	for i, ch := range scoreStr {
-		screen.SetContent(len(label)+i, 0, ch, nil, tcell.StyleDefault)
-	}
+	scoreStr := "Score:0"
+	drawText(screen, width-len(scoreStr), 0, scoreStr)
+	drawText(screen, x, y, "X")
 	screen.Show()
 
 	score := 0
@@ -71,30 +68,13 @@ func main() {
 				if mx == x && my == y {
 					x = rand.Intn(width)
 					y = rand.Intn(height)
-					screen.Clear()
-					screen.SetContent(x, y, 'X', nil, tcell.StyleDefault)
 					score++
-					// scoreBlock start
-					label := "Score:"
-					for i, ch := range label {
-						screen.SetContent(i, 0, ch, nil, tcell.StyleDefault)
-					}
-					scoreStr := strconv.Itoa(score)
-					for i, ch := range scoreStr {
-						screen.SetContent(len(label)+i, 0, ch, nil, tcell.StyleDefault)
-					}
-					// scoreBlock end
-
-					// timeBlock start
-					timeLabel := "Time:"
-					for i, ch := range timeLabel {
-						screen.SetContent(20+i, 0, ch, nil, tcell.StyleDefault)
-					}
-					timeStr := strconv.Itoa(timeLeft)
-					for i, ch := range timeStr {
-						screen.SetContent(20+len(timeLabel)+i, 0, ch, nil, tcell.StyleDefault)
-					}
-					// timeBlock end
+					screen.Clear()
+					drawText(screen, x, y, "X")
+					scoreStr := "Score:" + strconv.Itoa(score)
+					drawText(screen, width-len(scoreStr), 0, scoreStr)
+					timeStr := "Time:" + strconv.Itoa(timeLeft)
+					drawText(screen, width-len(timeStr), 1, timeStr)
 					screen.Show()
 				}
 			}
