@@ -48,10 +48,20 @@ func main() {
 	width, height := screen.Size()
 	x := rand.Intn(width)
 	y := rand.Intn(height)
+	target := []string{
+		" ●●●",
+		"●●●●●",
+		" ●●●",
+	}
 
 	scoreStr := "Score:0"
 	drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
-	drawText(screen, x, y, "X", tcell.StyleDefault.Foreground(tcell.ColorRed))
+	drawText(screen, x, y, "●", tcell.StyleDefault.Foreground(tcell.ColorRed))
+	for dy, row := range target {
+		for dx, ch := range row {
+			screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
+		}
+	}
 	screen.Show()
 
 	score := 0
@@ -65,12 +75,17 @@ func main() {
 		case *tcell.EventMouse:
 			mx, my := ev.Position()
 			if ev.Buttons() == tcell.Button1 {
-				if mx == x && my == y {
+				if mx >= x && mx < x+5 && my >= y && my < y+3 {
 					x = rand.Intn(width)
 					y = rand.Intn(height)
 					score++
 					screen.Clear()
-					drawText(screen, x, y, "X", tcell.StyleDefault.Foreground(tcell.ColorRed))
+					drawText(screen, x, y, "●", tcell.StyleDefault.Foreground(tcell.ColorRed))
+					for dy, row := range target {
+						for dx, ch := range row {
+							screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
+						}
+					}
 					scoreStr := "Score:" + strconv.Itoa(score)
 					drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
 					timeStr := "Time:" + strconv.Itoa(timeLeft)
