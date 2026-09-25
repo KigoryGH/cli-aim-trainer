@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"time"
 
-	// "github.com/ttacon/chalk"
 	tcell "github.com/gdamore/tcell/v2"
 )
 
@@ -24,7 +23,7 @@ func countdown(screen tcell.Screen) {
 		width, _ := screen.Size()
 		timeStr := "Time:" + strconv.Itoa(i)
 		startX := width - len(timeStr)
-		drawText(screen, startX, 1, timeStr)
+		drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
 		screen.Show()
 		time.Sleep(time.Second)
 	}
@@ -51,8 +50,8 @@ func main() {
 	y := rand.Intn(height)
 
 	scoreStr := "Score:0"
-	drawText(screen, width-len(scoreStr), 0, scoreStr)
-	drawText(screen, x, y, "X")
+	drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
+	drawText(screen, x, y, "X", tcell.StyleDefault.Foreground(tcell.ColorRed))
 	screen.Show()
 
 	score := 0
@@ -71,11 +70,11 @@ func main() {
 					y = rand.Intn(height)
 					score++
 					screen.Clear()
-					drawText(screen, x, y, "X")
+					drawText(screen, x, y, "X", tcell.StyleDefault.Foreground(tcell.ColorRed))
 					scoreStr := "Score:" + strconv.Itoa(score)
-					drawText(screen, width-len(scoreStr), 0, scoreStr)
+					drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
 					timeStr := "Time:" + strconv.Itoa(timeLeft)
-					drawText(screen, width-len(timeStr), 1, timeStr)
+					drawText(screen, width-len(timeStr), 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
 					screen.Show()
 				}
 			}
