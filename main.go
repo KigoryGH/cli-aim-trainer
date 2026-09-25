@@ -5,14 +5,15 @@ import (
 	"strconv"
 	"time"
 
+	// "github.com/ttacon/chalk"
 	tcell "github.com/gdamore/tcell/v2"
 )
 
 var timeLeft int = 60
 
-func drawText(screen tcell.Screen, x, y int, text string) {
+func drawText(screen tcell.Screen, x, y int, text string, style tcell.Style) {
 	for i, ch := range text {
-		screen.SetContent(x+i, y, ch, nil, tcell.StyleDefault)
+		screen.SetContent(x+i, y, ch, nil, style)
 	}
 }
 
