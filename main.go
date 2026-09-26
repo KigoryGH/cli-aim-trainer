@@ -11,21 +11,30 @@ import (
 var timeLeft int = 60
 
 func drawText(screen tcell.Screen, x, y int, text string, style tcell.Style) {
-	for i, ch := range text {
+	for i, ch := range []rune(text) {
 		screen.SetContent(x+i, y, ch, nil, style)
 	}
 }
 
 func countdown(screen tcell.Screen) {
-	_, _ = screen.Size()
 	for i := 60; i >= 0; i-- {
 		timeLeft = i
 		width, _ := screen.Size()
 		timeStr := "Time:" + strconv.Itoa(i)
-		startX := width - len(timeStr)
+		startX := width - len([]rune(timeStr))
 		drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
 		screen.Show()
 		time.Sleep(time.Second)
+	}
+}
+
+func drawTarget(screen tcell.Screen, x, y int, target []string) {
+	for dy, row := range target {
+		for dx, ch := range []rune(row) {
+			if ch != ' ' {
+				screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
+			}
+		}
 	}
 }
 
@@ -46,27 +55,20 @@ func main() {
 	go countdown(screen)
 
 	width, height := screen.Size()
-	x := rand.Intn(width)
-	y := rand.Intn(height)
+	x := rand.Intn(width - 4)
+	y := rand.Intn(height - 4)
+
 	target := []string{
 		" ●● ",
 		"●●●●",
-		"●●●●",
 		" ●● ",
 	}
 
-	scoreStr := "Score:0"
-	drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
-	for dy, row := range target {
-		for dx, ch := range row {
-			if ch != ' ' {
-				screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
-			}
-		}
-	}
-	screen.Show()
-
 	score := 0
+	scoreStr := "Score:0"
+	drawText(screen, width-len([]rune(scoreStr)), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
+	drawTarget(screen, x, y, target)
+	screen.Show()
 
 	for {
 		if timeLeft <= 0 {
@@ -78,21 +80,15 @@ func main() {
 			mx, my := ev.Position()
 			if ev.Buttons() == tcell.Button1 {
 				if mx >= x && mx < x+4 && my >= y && my < y+4 {
-					x = rand.Intn(width)
-					y = rand.Intn(height)
+					x = rand.Intn(width - 4)
+					y = rand.Intn(height - 4)
 					score++
 					screen.Clear()
-					for dy, row := range target {
-						for dx, ch := range row {
-							if ch != ' ' {
-								screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
-							}
-						}
-					}
+					drawTarget(screen, x, y, target)
 					scoreStr := "Score:" + strconv.Itoa(score)
-					drawText(screen, width-len(scoreStr), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
+					drawText(screen, width-len([]rune(scoreStr)), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
 					timeStr := "Time:" + strconv.Itoa(timeLeft)
-					drawText(screen, width-len(timeStr), 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+					drawText(screen, width-len([]rune(timeStr)), 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
 					screen.Show()
 				}
 			}
