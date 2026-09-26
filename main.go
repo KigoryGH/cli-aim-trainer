@@ -32,7 +32,7 @@ func drawTarget(screen tcell.Screen, x, y int, target []string) {
 	for dy, row := range target {
 		for dx, ch := range []rune(row) {
 			if ch != ' ' {
-				screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorRed))
+				screen.SetContent(x+dx, y+dy, ch, nil, tcell.StyleDefault.Foreground(tcell.ColorYellow))
 			}
 		}
 	}
@@ -73,6 +73,7 @@ func main() {
 	for {
 		if timeLeft <= 0 {
 			screen.Fini()
+			showOverview(score)
 			return
 		}
 		switch ev := screen.PollEvent().(type) {
@@ -95,6 +96,7 @@ func main() {
 		case *tcell.EventKey:
 			if ev.Rune() == 'q' {
 				screen.Fini()
+				showOverview(score)
 				return
 			}
 		}
