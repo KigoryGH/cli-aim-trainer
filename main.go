@@ -73,7 +73,7 @@ func main() {
 	for {
 		if timeLeft <= 0 {
 			screen.Fini()
-			showOverview(score, width, height)
+			showOverview(score, width, height, timeLeft)
 			return
 		}
 		switch ev := screen.PollEvent().(type) {
@@ -96,7 +96,7 @@ func main() {
 		case *tcell.EventKey:
 			if ev.Rune() == 'q' {
 				screen.Fini()
-				showOverview(score, width, height)
+				showOverview(score, width, height, timeLeft)
 				return
 			}
 		}

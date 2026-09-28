@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func showOverview(score int, width int, height int) {
+func showOverview(score int, width int, height int, timeLeft int) {
 	fmt.Println("\033[1;31m" + `
  ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗ 
 ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║   ██║██╔════╝██╔══██╗
@@ -26,5 +26,7 @@ func showOverview(score int, width int, height int) {
 
 	fmt.Println(skillLevel+"Score:"+"\033[0m", score)
 
-	fmt.Println("\033[1;33mterm-size:\033[0m", strconv.Itoa(width)+"x"+strconv.Itoa(height))
+	fmt.Println("\033[1;33mTerm-size:\033[0m", strconv.Itoa(width)+"x"+strconv.Itoa(height))
+
+	fmt.Println("\033[1;33mTime:\033[0m", timeLeft)
 }
