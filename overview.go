@@ -1,8 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
-func showOverview(score int) {
+func showOverview(score int, width int, height int) {
 	fmt.Println("\033[1;31m" + `
  ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗ 
 ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║   ██║██╔════╝██╔══██╗
@@ -22,4 +25,6 @@ func showOverview(score int) {
 	}
 
 	fmt.Println(skillLevel+"Score:"+"\033[0m", score)
+
+	fmt.Println("\033[1;33mterm-size:\033[0m", strconv.Itoa(width)+"x"+strconv.Itoa(height))
 }
