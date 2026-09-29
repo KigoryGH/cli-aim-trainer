@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -22,7 +23,12 @@ func countdown(screen tcell.Screen) {
 		width, _ := screen.Size()
 		timeStr := "Time:" + strconv.Itoa(i)
 		startX := width - len([]rune(timeStr))
-		drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+		if i <= 6 {
+			fmt.Print("\a")
+			drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorRed))
+		} else {
+			drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+		}
 		screen.Show()
 		time.Sleep(time.Second)
 	}
