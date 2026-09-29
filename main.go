@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 	tcell "github.com/gdamore/tcell/v2"
 )
 
-var timeLeft int = 60
+var timeLeft int
 
 func drawText(screen tcell.Screen, x, y int, text string, style tcell.Style) {
 	for i, ch := range []rune(text) {
@@ -17,8 +18,8 @@ func drawText(screen tcell.Screen, x, y int, text string, style tcell.Style) {
 	}
 }
 
-func countdown(screen tcell.Screen) {
-	for i := 60; i >= 0; i-- {
+func countdown(screen tcell.Screen, duration int) {
+	for i := duration; i >= 0; i-- {
 		timeLeft = i
 		width, _ := screen.Size()
 		timeStr := "Time:" + strconv.Itoa(i)
@@ -45,6 +46,11 @@ func drawTarget(screen tcell.Screen, x, y int, target []string) {
 }
 
 func main() {
+	duration := flag.Int("time", 60, "game duration in seconds")
+	flag.Parse()
+
+	timeLeft = *duration
+
 	screen, err := tcell.NewScreen()
 	if err != nil {
 		panic(err)
@@ -58,7 +64,7 @@ func main() {
 	screen.Clear()
 	screen.EnableMouse()
 
-	go countdown(screen)
+	go countdown(screen, *duration)
 
 	width, height := screen.Size()
 	x := rand.Intn(width - 4)
@@ -79,7 +85,7 @@ func main() {
 	for {
 		if timeLeft <= 0 {
 			screen.Fini()
-			showOverview(score, width, height, timeLeft)
+			showOverview(score, width, height, *duration)
 			return
 		}
 		switch ev := screen.PollEvent().(type) {
@@ -102,7 +108,7 @@ func main() {
 		case *tcell.EventKey:
 			if ev.Rune() == 'q' {
 				screen.Fini()
-				showOverview(score, width, height, timeLeft)
+				showOverview(score, width, height, *duration)
 				return
 			}
 		}
