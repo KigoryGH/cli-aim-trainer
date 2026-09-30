@@ -14,3 +14,9 @@ I had a lot of fun "testing" this project and actually building something this w
 this is how the experience should normally work 
 running ``` aim-trainer ``` will start the game and then you could click on the circles using your mouse.
 you have a default time of 60 seconds but you can change using the ``` --time <duration> ``` flag
+
+<img src="preview/previewImage1.png">
+
+as you can see there is the score and the time on the left and a yellow circle you need to click on to make your score go up!
+
+**_this is is basicaly the whole game lol_**
