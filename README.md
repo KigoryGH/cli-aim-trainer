@@ -12,3 +12,5 @@ I had a lot of fun "testing" this project and actually building something this w
 
 # preview
 this is how the experience should normally work 
+running ``` aim-trainer ``` will start the game and then you could click on the circles using your mouse.
+you have a default time of 60 seconds but you can change using the ``` --time <duration> ``` flag
