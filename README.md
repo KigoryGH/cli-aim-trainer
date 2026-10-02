@@ -21,3 +21,5 @@ you have a default time of 60 seconds but you can change that using the ``` --ti
 as you can see there is the score and the time on the left and a yellow circle you need to click on to make your score go up!
 
 **_this is is basicaly the whole game lol_**
+
+at when the time reaches 0 or you press q (quit the game) there will be an overview showing you you'r score
