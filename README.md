@@ -48,9 +48,8 @@ Here is what they mean:
 **green = pro**
 
 <p align="center">
-  <img src="./images/easterEgg1.png" width="45%">
-  <img src="./images/easterEgg2.png" width="45%">
+  <img src="./images/easterEgg1.png" width="49%"><img src="./images/easterEgg2.png" width="49%">
 </p>
 <p align="center">
-  <img src="./images/easterEgg3.png" width="45%">
+  <img src="./images/easterEgg3.png" width="49%">
 </p>
