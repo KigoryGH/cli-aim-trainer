@@ -47,4 +47,10 @@ Here is what they mean:
 
 **green = pro**
 
-<img src=./images/easterEgg1.png width="600"> <img src=./images/easterEgg2.png width="600"> <img src=./images/easterEgg3.png width="600">
+<p align="center">
+  <img src="./images/easterEgg1.png" width="45%">
+  <img src="./images/easterEgg2.png" width="45%">
+</p>
+<p align="center">
+  <img src="./images/easterEgg3.png" width="45%">
+</p>
