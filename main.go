@@ -21,20 +21,25 @@ func drawText(screen tcell.Screen, x, y int, text string, style tcell.Style) {
 	}
 }
 
-func countdown(screen tcell.Screen, dur int) {
+func countdown(screen tcell.Screen, dur int, stop chan bool) {
 	for i := dur; i >= 0; i-- {
-		timeLeft = i
-		width, _ := screen.Size()
-		timeStr := "Time:" + strconv.Itoa(i)
-		startX := width - len([]rune(timeStr))
-		if i <= 6 {
-			fmt.Print("\a")
-			drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorRed))
-		} else {
-			drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+		select {
+		case <-stop:
+			return
+		default:
+			timeLeft = i
+			width, _ := screen.Size()
+			timeStr := "Time:" + strconv.Itoa(i)
+			startX := width - len([]rune(timeStr))
+			if i <= 6 {
+				fmt.Print("\a")
+				drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorRed))
+			} else {
+				drawText(screen, startX, 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+			}
+			screen.Show()
+			time.Sleep(time.Second)
 		}
-		screen.Show()
-		time.Sleep(time.Second)
 	}
 }
 
@@ -67,8 +72,6 @@ var rootCmd = &cobra.Command{
 		screen.Clear()
 		screen.EnableMouse()
 
-		go countdown(screen, duration)
-
 		width, height := screen.Size()
 		x := rand.Intn(width - 4)
 		y := rand.Intn(height - 4)
@@ -80,10 +83,21 @@ var rootCmd = &cobra.Command{
 		}
 
 		score := 0
-		scoreStr := "Score:0"
-		drawText(screen, width-len([]rune(scoreStr)), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
-		drawTarget(screen, x, y, target)
-		screen.Show()
+		confirming := false
+
+		redraw := func() {
+			screen.Clear()
+			scoreStr := "Score:" + strconv.Itoa(score)
+			drawText(screen, width-len([]rune(scoreStr)), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
+			timeStr := "Time:" + strconv.Itoa(timeLeft)
+			drawText(screen, width-len([]rune(timeStr)), 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+			drawTarget(screen, x, y, target)
+			screen.Show()
+		}
+
+		stop := make(chan bool)
+		go countdown(screen, duration, stop)
+		redraw()
 
 		for {
 			if timeLeft <= 0 {
@@ -93,26 +107,49 @@ var rootCmd = &cobra.Command{
 			}
 			switch ev := screen.PollEvent().(type) {
 			case *tcell.EventMouse:
-				mx, my := ev.Position()
-				if ev.Buttons() == tcell.Button1 {
-					if mx >= x && mx < x+4 && my >= y && my < y+4 {
-						x = rand.Intn(width - 4)
-						y = rand.Intn(height - 4)
-						score++
-						screen.Clear()
-						drawTarget(screen, x, y, target)
-						scoreStr := "Score:" + strconv.Itoa(score)
-						drawText(screen, width-len([]rune(scoreStr)), 0, scoreStr, tcell.StyleDefault.Foreground(tcell.ColorYellow))
-						timeStr := "Time:" + strconv.Itoa(timeLeft)
-						drawText(screen, width-len([]rune(timeStr)), 1, timeStr, tcell.StyleDefault.Foreground(tcell.ColorWhite))
-						screen.Show()
+				if !confirming {
+					mx, my := ev.Position()
+					if ev.Buttons() == tcell.Button1 {
+						if mx >= x && mx < x+4 && my >= y && my < y+4 {
+							x = rand.Intn(width - 4)
+							y = rand.Intn(height - 4)
+							score++
+							redraw()
+						}
 					}
 				}
 			case *tcell.EventKey:
-				if ev.Rune() == 'q' {
-					screen.Fini()
-					showOverview(score, width, height, duration)
-					return
+				if confirming {
+					if ev.Rune() == 'y' {
+						stop <- true
+						score = 0
+						timeLeft = duration
+						x = rand.Intn(width - 4)
+						y = rand.Intn(height - 4)
+						stop = make(chan bool)
+						go countdown(screen, duration, stop)
+						confirming = false
+						redraw()
+					} else if ev.Rune() == 'n' {
+						confirming = false
+						redraw()
+					}
+				} else {
+					if ev.Rune() == 'q' {
+						screen.Fini()
+						showOverview(score, width, height, duration)
+						return
+					}
+					if ev.Rune() == 'r' {
+						confirming = true
+						resetMsg := "Reset?"
+						yesMsg := "(y)es"
+						noMsg := "(n)o"
+						drawText(screen, width/2-len(resetMsg)/2, 0, resetMsg, tcell.StyleDefault.Foreground(tcell.ColorYellow))
+						drawText(screen, width/2-len(yesMsg)/2, 1, yesMsg, tcell.StyleDefault.Foreground(tcell.ColorGreen))
+						drawText(screen, width/2-len(noMsg)/2, 2, noMsg, tcell.StyleDefault.Foreground(tcell.ColorRed))
+						screen.Show()
+					}
 				}
 			}
 		}
