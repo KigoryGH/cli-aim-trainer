@@ -22,7 +22,7 @@ you have a default time of 60 seconds but you can change that using the `--time 
 
 <img src="images/previewImage1.png">
 
-as you can see there is the score and the time on the left and a yellow circle you need to click on to make your score go up!
+as you can see there is the score and the time on the right and a yellow circle you need to click on to make your score go up!
 
 **_this is is basicaly the whole game lol_**
 
